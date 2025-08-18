@@ -4,7 +4,7 @@ import com.ecommerce.productService.application.port.in.ProductUseCase;
 import com.ecommerce.productService.domain.model.Product;
 import com.ecommerce.productService.infrastructure.controller.dto.ProductRequest;
 import com.ecommerce.productService.infrastructure.controller.dto.ProductResponse;
-import com.ecommerce.productService.infrastructure.persistence.mapper.ProductWebMapper;
+import com.ecommerce.productService.infrastructure.controller.mapper.ProductWebMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

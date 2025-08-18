@@ -1,4 +1,4 @@
-package com.ecommerce.productService.infrastructure.persistence;
+package com.ecommerce.productService.infrastructure.persistence.adapter;
 
 import com.ecommerce.productService.application.port.out.ProductRepositoryPort;
 import com.ecommerce.productService.domain.model.Product;
