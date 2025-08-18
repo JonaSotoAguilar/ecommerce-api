@@ -1,4 +1,4 @@
-package com.ecommerce.productService.infrastructure.controller;
+package com.ecommerce.productService.infrastructure.controller.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

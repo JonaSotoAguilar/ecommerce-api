@@ -1,4 +1,4 @@
-package com.ecommerce.productService.infrastructure.persistence.mapper;
+package com.ecommerce.productService.infrastructure.controller.mapper;
 
 import com.ecommerce.productService.domain.model.Product;
 import com.ecommerce.productService.infrastructure.controller.dto.ProductRequest;

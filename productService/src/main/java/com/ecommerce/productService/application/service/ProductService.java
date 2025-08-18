@@ -9,7 +9,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-import static com.ecommerce.productService.domain.service.ProductValidationService.validateProduct;
+import static com.ecommerce.productService.domain.service.ProductValidationService.validate;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +19,7 @@ public class ProductService implements ProductUseCase {
 
     @Override
     public Product create(Product product) {
-        validateProduct(product);
+        validate(product);
         if (repository.existsByName(product.getName())) {
             throw new IllegalArgumentException("Ya existe un producto con ese nombre");
         }
@@ -44,7 +44,7 @@ public class ProductService implements ProductUseCase {
         current.setDescription(product.getDescription());
         if (product.getPrice() != null) current.setPrice(product.getPrice());
         if (product.getStockQuantity() != null) current.setStockQuantity(product.getStockQuantity());
-        validateProduct(current);
+        validate(current);
         return repository.save(current);
     }
 
