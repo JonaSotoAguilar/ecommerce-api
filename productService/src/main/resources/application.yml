@@ -1,0 +1,35 @@
+server:
+  port: 8081   # Puerto exclusivo para Product Service
+
+spring:
+  application:
+    name: product-service   # Identificador del microservicio
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecommerce_db?useSSL=false&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update   # En dev: update. En prod: validate o usar migraciones (Flyway/Liquibase)
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+# Actuator (para health checks)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+# Logging (opcional)
+logging:
+  level:
+    org.springframework: INFO
+    com.yourcompany.productservice: DEBUG
