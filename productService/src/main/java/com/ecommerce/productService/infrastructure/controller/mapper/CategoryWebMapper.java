@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface CategoryWebMapper {
+
     @Mapping(target = "id", ignore = true)
     Category toDomain(CategoryRequest req);
 
