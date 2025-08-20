@@ -12,7 +12,7 @@
     <artifactId>productService</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>productService</name>
-    <description>Producto Service</description>
+    <description>Product Service</description>
     <url/>
     <licenses>
         <license/>

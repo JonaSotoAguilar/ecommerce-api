@@ -1,4 +1,4 @@
-package com.ecommerce.productService.infrastructure.controller.dto;
+package com.ecommerce.productService.domain.model.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

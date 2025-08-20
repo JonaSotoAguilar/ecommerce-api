@@ -1,4 +1,4 @@
-package com.ecommerce.productService.domain.model;
+package com.ecommerce.productService.domain.model.dto;
 
 import lombok.*;
 
@@ -9,11 +9,11 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Product {
+public class ProductDto {
     private Long id;
     private String name;
     private String description;
     private BigDecimal price;
     private Integer stock;
-    private Category category;
+    private Long categoryId;
 }

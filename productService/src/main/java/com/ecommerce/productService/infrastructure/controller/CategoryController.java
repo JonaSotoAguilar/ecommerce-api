@@ -1,16 +1,13 @@
 package com.ecommerce.productService.infrastructure.controller;
 
 import com.ecommerce.productService.application.port.in.CategoryUseCase;
-import com.ecommerce.productService.domain.model.Category;
-import com.ecommerce.productService.infrastructure.controller.dto.CategoryRequest;
-import com.ecommerce.productService.infrastructure.controller.dto.CategoryResponse;
-import com.ecommerce.productService.infrastructure.controller.mapper.CategoryWebMapper;
+import com.ecommerce.productService.domain.model.dto.CategoryDto;
+import com.ecommerce.productService.domain.model.dto.request.CategoryRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -19,29 +16,25 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryUseCase useCase;
-    private final CategoryWebMapper mapper;
 
     @PostMapping
-    public ResponseEntity<CategoryResponse> create(@Valid @RequestBody CategoryRequest req) {
-        Category created = useCase.create(mapper.toDomain(req));
-        return ResponseEntity.created(URI.create("/api/categories/" + created.getId()))
-                .body(mapper.toResponse(created));
+    public ResponseEntity<CategoryDto> create(@Valid @RequestBody CategoryRequest req) {
+        return ResponseEntity.ok(useCase.create(req));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryResponse> get(@PathVariable Long id) {
-        return ResponseEntity.ok(mapper.toResponse(useCase.getById(id)));
+    public ResponseEntity<CategoryDto> get(@PathVariable Long id) {
+        return ResponseEntity.ok(useCase.getById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> list() {
-        return ResponseEntity.ok(useCase.getAll().stream().map(mapper::toResponse).toList());
+    public ResponseEntity<List<CategoryDto>> list() {
+        return ResponseEntity.ok(useCase.getAll());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponse> update(@PathVariable Long id, @Valid @RequestBody CategoryRequest req) {
-        Category updated = useCase.update(id, mapper.toDomain(req));
-        return ResponseEntity.ok(mapper.toResponse(updated));
+    public ResponseEntity<CategoryDto> update(@PathVariable Long id, @Valid @RequestBody CategoryRequest req) {
+        return ResponseEntity.ok(useCase.update(id, req));
     }
 
     @DeleteMapping("/{id}")
