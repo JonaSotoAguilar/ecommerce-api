@@ -1,11 +1,14 @@
 package com.ecommerce.productService.application.service;
 
+import com.ecommerce.productService.application.mapper.ProductDtoMapper;
 import com.ecommerce.productService.application.port.in.ProductUseCase;
+import com.ecommerce.productService.application.port.out.CategoryRepositoryPort;
 import com.ecommerce.productService.application.port.out.ProductRepositoryPort;
 import com.ecommerce.productService.domain.model.Product;
+import com.ecommerce.productService.domain.model.dto.ProductDto;
+import com.ecommerce.productService.domain.model.dto.request.ProductRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -15,42 +18,57 @@ import static com.ecommerce.productService.domain.service.ProductValidationServi
 @RequiredArgsConstructor
 public class ProductService implements ProductUseCase {
 
-    private final ProductRepositoryPort repository;
+    private final ProductRepositoryPort repo;
+    private final CategoryRepositoryPort categoryRepo;
+    private final ProductDtoMapper mapper;
 
     @Override
-    public Product create(Product product) {
-        validate(product);
-        if (repository.existsByName(product.getName())) {
+    public ProductDto create(ProductRequest request) {
+        Product productDomain = mapper.toDomain(request);
+
+        validate(productDomain);
+        if (repo.existsByName(productDomain.getName())) {
             throw new IllegalArgumentException("Ya existe un producto con ese nombre");
         }
-        return repository.save(product);
+        //FIXME: Revisar si existe categoria
+
+        return mapper.toDto(repo.save(productDomain));
     }
 
     @Override
-    public Product getById(Long id) {
-        return repository.findById(id)
+    public ProductDto getById(Long id) {
+        return repo.findById(id)
+                .map(mapper::toDto)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
     }
 
     @Override
-    public List<Product> getAll() {
-        return repository.findAll();
+    public List<ProductDto> getAll() {
+        return mapper.toDtoList(repo.findAll());
     }
 
     @Override
-    public Product update(Long id, Product product) {
-        Product current = getById(id);
-        if (StringUtils.hasText(product.getName())) current.setName(product.getName());
-        current.setDescription(product.getDescription());
-        if (product.getPrice() != null) current.setPrice(product.getPrice());
-        if (product.getStockQuantity() != null) current.setStockQuantity(product.getStockQuantity());
+    public ProductDto update(Long id, ProductRequest request) {
+        Product current = repo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+
+        Product changes = mapper.toDomain(request);
+        if (!changes.getName().equals(current.getName()) && repo.existsByName(changes.getName())) {
+            throw new IllegalArgumentException("Ya existe un producto con ese nombre");
+        }
+        current.setName(changes.getName());
+        current.setDescription(changes.getDescription());
+        current.setPrice(changes.getPrice());
+        current.setStock(changes.getStock());
+
+        //FIXME: Revisar si existe categoria
         validate(current);
-        return repository.save(current);
+        return mapper.toDto(repo.save(current));
     }
 
     @Override
     public void delete(Long id) {
         getById(id);
-        repository.deleteById(id);
+        repo.deleteById(id);
     }
 }

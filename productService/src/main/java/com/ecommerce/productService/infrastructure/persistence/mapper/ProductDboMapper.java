@@ -1,0 +1,24 @@
+package com.ecommerce.productService.infrastructure.persistence.mapper;
+
+import com.ecommerce.productService.domain.model.Product;
+import com.ecommerce.productService.infrastructure.persistence.entity.ProductEntity;
+import org.mapstruct.InheritInverseConfiguration;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
+
+import java.util.List;
+
+@Mapper(componentModel = "spring", uses = {CategoryDboMapper.class})
+public interface ProductDboMapper {
+    @Mappings({
+            @Mapping(target = "createdAt", ignore = true),
+            @Mapping(target = "updatedAt", ignore = true),
+    })
+    ProductEntity toDbo(Product domain);
+
+    @InheritInverseConfiguration
+    Product toDomain(ProductEntity entity);
+
+    List<Product> toDomainList(List<ProductEntity> products);
+}

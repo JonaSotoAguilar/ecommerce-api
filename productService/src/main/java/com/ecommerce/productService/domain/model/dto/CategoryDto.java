@@ -1,13 +1,14 @@
-package com.ecommerce.productService.domain.model;
+package com.ecommerce.productService.domain.model.dto;
+
 
 import lombok.*;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class Category {
+@AllArgsConstructor
+@Builder
+public class CategoryDto {
     private Long id;
     private String name;
     private String description;

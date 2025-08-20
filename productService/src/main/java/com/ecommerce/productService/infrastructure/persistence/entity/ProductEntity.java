@@ -28,9 +28,17 @@ public class ProductEntity {
     private BigDecimal price;
 
     @Column(nullable = false)
-    private Integer stockQuantity;
+    private Integer stock;
 
+    // N:1 con Category
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id",
+            foreignKey = @ForeignKey(name = "fk_product_category"))
+    private CategoryEntity category;
+
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 
     @PrePersist

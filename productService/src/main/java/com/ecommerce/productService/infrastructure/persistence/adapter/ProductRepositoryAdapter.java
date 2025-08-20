@@ -2,7 +2,7 @@ package com.ecommerce.productService.infrastructure.persistence.adapter;
 
 import com.ecommerce.productService.application.port.out.ProductRepositoryPort;
 import com.ecommerce.productService.domain.model.Product;
-import com.ecommerce.productService.infrastructure.persistence.mapper.ProductPersistenceMapper;
+import com.ecommerce.productService.infrastructure.persistence.mapper.ProductDboMapper;
 import com.ecommerce.productService.infrastructure.persistence.repository.SpringDataProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -15,11 +15,16 @@ import java.util.Optional;
 public class ProductRepositoryAdapter implements ProductRepositoryPort {
 
     private final SpringDataProductRepository jpa;
-    private final ProductPersistenceMapper mapper;
+    private final ProductDboMapper mapper;
 
     @Override
     public Product save(Product product) {
-        return mapper.toDomain(jpa.save(mapper.toEntity(product)));
+
+        var productToSave = mapper.toDbo(product);
+        var productSaved = jpa.save(productToSave);
+
+        return mapper.toDomain(productSaved);
+        //return mapper.toDomain(jpa.save(mapper.toEntity(product)));
     }
 
     @Override
@@ -29,7 +34,7 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
 
     @Override
     public List<Product> findAll() {
-        return jpa.findAll().stream().map(mapper::toDomain).toList();
+        return mapper.toDomainList(jpa.findAll());
     }
 
     @Override

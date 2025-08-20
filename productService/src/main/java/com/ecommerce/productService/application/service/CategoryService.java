@@ -1,11 +1,13 @@
 package com.ecommerce.productService.application.service;
 
+import com.ecommerce.productService.application.mapper.CategoryDtoMapper;
 import com.ecommerce.productService.application.port.in.CategoryUseCase;
 import com.ecommerce.productService.application.port.out.CategoryRepositoryPort;
 import com.ecommerce.productService.domain.model.Category;
+import com.ecommerce.productService.domain.model.dto.CategoryDto;
+import com.ecommerce.productService.domain.model.dto.request.CategoryRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -15,41 +17,44 @@ import static com.ecommerce.productService.domain.service.CategoryValidationServ
 @RequiredArgsConstructor
 public class CategoryService implements CategoryUseCase {
     private final CategoryRepositoryPort repo;
+    private final CategoryDtoMapper mapper;
 
     @Override
-    public Category create(Category c) {
-        validate(c);
-        if (repo.existsByName(c.getName())) {
+    public CategoryDto create(CategoryRequest request) {
+        var categoryDomain = mapper.toDomain(request);
+        validate(categoryDomain);
+        if (repo.existsByName(categoryDomain.getName())) {
             throw new IllegalArgumentException("La categoría ya existe");
         }
-        return repo.save(c);
+        return mapper.toDto(repo.save(categoryDomain));
     }
 
     @Override
-    public Category getById(Long id) {
-        return repo.findById(id).orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+    public CategoryDto getById(Long id) {
+        return repo.findById(id)
+                .map(mapper::toDto)
+                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
     }
 
     @Override
-    public List<Category> getAll() {
-        return repo.findAll();
+    public List<CategoryDto> getAll() {
+        return mapper.toDtoList(repo.findAll());
     }
 
     @Override
-    public Category update(Long id, Category c) {
-        Category current = getById(id);
-        if (StringUtils.hasText(c.getName())) current = Category.builder()
-                .id(current.getId())
-                .name(c.getName())
-                .description(c.getDescription())
-                .build();
-        else current = Category.builder()
-                .id(current.getId())
-                .name(current.getName())
-                .description(c.getDescription())
-                .build();
+    public CategoryDto update(Long id, CategoryRequest request) {
+        Category current = repo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+
+        Category changes = mapper.toDomain(request);
+        if (!changes.getName().equals(current.getName()) && repo.existsByName(changes.getName())) {
+            throw new IllegalArgumentException("Ya existe un producto con ese nombre");
+        }
+        current.setName(changes.getName());
+        current.setDescription(changes.getDescription());
+
         validate(current);
-        return repo.save(current);
+        return mapper.toDto(repo.save(current));
     }
 
     @Override
@@ -57,5 +62,6 @@ public class CategoryService implements CategoryUseCase {
         getById(id); // asegura existencia
         repo.deleteById(id);
     }
+    
 
 }
