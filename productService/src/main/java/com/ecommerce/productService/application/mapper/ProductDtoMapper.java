@@ -19,5 +19,18 @@ public interface ProductDtoMapper {
     ProductDto toDto(Product product);
 
     List<ProductDto> toDtoList(List<Product> products);
+
+    // Long -> Product (solo con id, sin ir a DB)
+    default Product map(Long id) {
+        if (id == null) return null;
+        Product p = new Product();
+        p.setId(id);
+        return p;
+    }
+
+    // Product -> Long (extraer id)
+    default Long map(Product product) {
+        return product != null ? product.getId() : null;
+    }
 }
 

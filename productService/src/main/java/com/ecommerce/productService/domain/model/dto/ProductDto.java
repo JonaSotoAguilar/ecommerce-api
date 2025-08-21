@@ -16,4 +16,6 @@ public class ProductDto {
     private BigDecimal price;
     private Integer stock;
     private Long categoryId;
+
+    //FIXME: Agregar barcode y status
 }

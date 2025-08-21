@@ -24,13 +24,12 @@ public class ProductEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false, precision = 10, scale = 4)
     private BigDecimal price;
 
     @Column(nullable = false)
     private Integer stock;
 
-    // N:1 con Category
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
@@ -39,6 +38,8 @@ public class ProductEntity {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    //FIXME: Agregar status, deltedAt, barrcode
 
     @PrePersist
     void onCreate() {

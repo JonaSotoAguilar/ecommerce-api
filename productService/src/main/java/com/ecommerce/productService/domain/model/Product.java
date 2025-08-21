@@ -16,4 +16,6 @@ public class Product {
     private BigDecimal price;
     private Integer stock;
     private Category category;
+
+    //FIXME: Agregar barrcode y status
 }

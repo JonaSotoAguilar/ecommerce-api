@@ -1,4 +1,4 @@
-package com.ecommerce.productService.application.service;
+package com.ecommerce.productService.application.service.command;
 
 import com.ecommerce.productService.application.mapper.CategoryDtoMapper;
 import com.ecommerce.productService.application.port.in.command.CategoryCommandUseCase;
