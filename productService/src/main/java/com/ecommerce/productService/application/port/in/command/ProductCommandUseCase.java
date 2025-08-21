@@ -1,16 +1,10 @@
-package com.ecommerce.productService.application.port.in;
+package com.ecommerce.productService.application.port.in.command;
 
 import com.ecommerce.productService.domain.model.dto.ProductDto;
 import com.ecommerce.productService.domain.model.dto.request.ProductRequest;
 
-import java.util.List;
-
-public interface ProductUseCase {
+public interface ProductCommandUseCase {
     ProductDto create(ProductRequest product);
-
-    ProductDto getById(Long id);
-
-    List<ProductDto> getAll();
 
     ProductDto update(Long id, ProductRequest product);
 

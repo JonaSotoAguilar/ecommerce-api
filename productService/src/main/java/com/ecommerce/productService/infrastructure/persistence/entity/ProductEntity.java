@@ -32,8 +32,7 @@ public class ProductEntity {
 
     // N:1 con Category
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id",
-            foreignKey = @ForeignKey(name = "fk_product_category"))
+    @JoinColumn(name = "category_id")
     private CategoryEntity category;
 
     @Column(name = "created_at", updatable = false)
