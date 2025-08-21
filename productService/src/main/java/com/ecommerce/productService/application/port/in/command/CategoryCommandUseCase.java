@@ -1,16 +1,10 @@
-package com.ecommerce.productService.application.port.in;
+package com.ecommerce.productService.application.port.in.command;
 
 import com.ecommerce.productService.domain.model.dto.CategoryDto;
 import com.ecommerce.productService.domain.model.dto.request.CategoryRequest;
 
-import java.util.List;
-
-public interface CategoryUseCase {
+public interface CategoryCommandUseCase {
     CategoryDto create(CategoryRequest c);
-
-    CategoryDto getById(Long id);
-
-    List<CategoryDto> getAll();
 
     CategoryDto update(Long id, CategoryRequest c);
 

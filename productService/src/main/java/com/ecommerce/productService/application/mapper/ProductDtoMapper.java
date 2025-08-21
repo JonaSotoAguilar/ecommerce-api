@@ -12,7 +12,7 @@ import java.util.List;
 public interface ProductDtoMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(source = "categoryId", target = "category.id")
+    @Mapping(source = "categoryId", target = "category")
     Product toDomain(ProductRequest request);
 
     @Mapping(source = "category", target = "categoryId")

@@ -7,6 +7,7 @@ import com.ecommerce.productService.infrastructure.persistence.repository.Spring
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,36 +15,47 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductRepositoryAdapter implements ProductRepositoryPort {
 
-    private final SpringDataProductRepository jpa;
+    private final SpringDataProductRepository db;
     private final ProductDboMapper mapper;
 
     @Override
     public Product save(Product product) {
-
-        var productToSave = mapper.toDbo(product);
-        var productSaved = jpa.save(productToSave);
-
-        return mapper.toDomain(productSaved);
-        //return mapper.toDomain(jpa.save(mapper.toEntity(product)));
+        return mapper.toDomain(db.save(mapper.toDbo(product)));
     }
 
     @Override
     public Optional<Product> findById(Long id) {
-        return jpa.findById(id).map(mapper::toDomain);
+        return db.findById(id).map(mapper::toDomain);
     }
 
     @Override
     public List<Product> findAll() {
-        return mapper.toDomainList(jpa.findAll());
+        return mapper.toDomainList(db.findAll());
     }
 
     @Override
     public void deleteById(Long id) {
-        jpa.deleteById(id);
+        db.deleteById(id);
     }
 
     @Override
     public boolean existsByName(String name) {
-        return jpa.existsByName(name);
+        return db.existsByName(name);
+    }
+
+    // --- Filtros ---
+    @Override
+    public List<Product> findAllByCategoryId(Long categoryId) {
+        return mapper.toDomainList(db.findAllByCategory_Id(categoryId));
+    }
+
+    @Override
+    public List<Product> findAllByPriceLessOrEqual(BigDecimal maxPrice) {
+        return mapper.toDomainList(db.findAllByPriceLessThanEqual(maxPrice));
+    }
+
+    @Override
+    public List<Product> findAllByStockLessOrEqual(Integer maxStock) {
+        return mapper.toDomainList(db.findAllByStockLessThanEqual(maxStock));
     }
 }
