@@ -8,6 +8,8 @@ import java.util.List;
 public interface ProductQueryUseCase {
     ProductDto getById(Long id);
 
+    ProductDto getByBarcode(String barcode);
+
     List<ProductDto> getAll();
 
     // Filters

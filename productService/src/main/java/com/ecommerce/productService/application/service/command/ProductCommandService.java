@@ -1,4 +1,4 @@
-package com.ecommerce.productService.application.service;
+package com.ecommerce.productService.application.service.command;
 
 import com.ecommerce.productService.application.mapper.ProductDtoMapper;
 import com.ecommerce.productService.application.port.in.command.ProductCommandUseCase;
@@ -10,8 +10,6 @@ import com.ecommerce.productService.domain.model.dto.request.ProductRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.ecommerce.productService.domain.service.ProductValidationService.validate;
 
 @Service
 @RequiredArgsConstructor
@@ -26,14 +24,7 @@ public class ProductCommandService implements ProductCommandUseCase {
     public ProductDto create(ProductRequest request) {
         Product productDomain = mapper.toDomain(request);
 
-        validate(productDomain);
-        if (repo.existsByName(productDomain.getName())) {
-            throw new IllegalArgumentException("Ya existe un producto con ese nombre");
-        }
-
-        if (productDomain.getCategory() != null)
-            categoryRepo.findById(request.categoryId())
-                    .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrado"));
+        existsData(true, true, productDomain);
 
         return mapper.toDto(repo.save(productDomain));
     }
@@ -46,13 +37,8 @@ public class ProductCommandService implements ProductCommandUseCase {
 
         Product changes = mapper.toDomain(request);
         changes.setId(current.getId());
-        validate(changes);
-        if (!changes.getName().equals(current.getName()) && repo.existsByName(changes.getName())) {
-            throw new IllegalArgumentException("Ya existe un producto con ese nombre");
-        }
-        if (changes.getCategory() != null)
-            categoryRepo.findById(request.categoryId())
-                    .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrado"));
+        changes.setBarcode(current.getBarcode());
+        existsData(!changes.getName().equals(current.getName()), !changes.getBarcode().equals(current.getBarcode()), changes);
 
         return mapper.toDto(repo.save(changes));
     }
@@ -63,6 +49,20 @@ public class ProductCommandService implements ProductCommandUseCase {
         repo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
         repo.deleteById(id);
+    }
+
+    private void existsData(boolean newName, boolean newBarcode, Product productDomain) {
+        if (newName && repo.existsByName(productDomain.getName())) {
+            throw new IllegalArgumentException("Ya existe un producto con ese nombre");
+        }
+
+        if (newBarcode && repo.existsByBarcode(productDomain.getBarcode())) {
+            throw new IllegalArgumentException("Ya existe un producto con ese código de barras");
+        }
+
+        if (productDomain.getCategory() != null)
+            categoryRepo.findById(productDomain.getCategory().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrado"));
     }
 
 }

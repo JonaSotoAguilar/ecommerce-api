@@ -25,8 +25,13 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> get(@PathVariable Long id) {
+    public ResponseEntity<ProductDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(query.getById(id));
+    }
+
+    @GetMapping("/barcode")
+    public ResponseEntity<ProductDto> getByBarcode(@RequestParam String barcode) {
+        return ResponseEntity.ok(query.getByBarcode(barcode));
     }
 
     @GetMapping
@@ -35,12 +40,12 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDto> update(@PathVariable Long id, @Valid @RequestBody ProductRequest req) {
+    public ResponseEntity<ProductDto> updateById(@PathVariable Long id, @Valid @RequestBody ProductRequest req) {
         return ResponseEntity.ok(command.update(id, req));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         command.delete(id);
         return ResponseEntity.noContent().build();
     }

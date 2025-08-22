@@ -1,4 +1,4 @@
-package com.ecommerce.productService.application.service;
+package com.ecommerce.productService.application.service.query;
 
 import com.ecommerce.productService.application.mapper.CategoryDtoMapper;
 import com.ecommerce.productService.application.port.in.query.CategoryQueryUseCase;

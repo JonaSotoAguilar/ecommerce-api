@@ -1,4 +1,4 @@
-package com.ecommerce.productService.application.service;
+package com.ecommerce.productService.application.service.query;
 
 import com.ecommerce.productService.application.mapper.ProductDtoMapper;
 import com.ecommerce.productService.application.port.in.query.ProductQueryUseCase;
@@ -30,6 +30,14 @@ public class ProductQueryService implements ProductQueryUseCase {
     @Transactional(readOnly = true)
     public List<ProductDto> getAll() {
         return mapper.toDtoList(repo.findAll());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ProductDto getByBarcode(String barcode) {
+        return repo.findByBarcode(barcode)
+                .map(mapper::toDto)
+                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
     }
 
     // Filters

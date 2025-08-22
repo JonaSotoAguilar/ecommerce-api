@@ -1,4 +1,4 @@
-package com.ecommerce.productService.application.service;
+package com.ecommerce.productService.application.service.command;
 
 import com.ecommerce.productService.application.mapper.CategoryDtoMapper;
 import com.ecommerce.productService.application.port.in.command.CategoryCommandUseCase;
@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.ecommerce.productService.domain.service.CategoryValidationService.validate;
-
 @Service
 @RequiredArgsConstructor
 public class CategoryCommandService implements CategoryCommandUseCase {
@@ -22,7 +20,6 @@ public class CategoryCommandService implements CategoryCommandUseCase {
     @Transactional
     public CategoryDto create(CategoryRequest request) {
         var categoryDomain = mapper.toDomain(request);
-        validate(categoryDomain);
         if (repo.existsByName(categoryDomain.getName())) {
             throw new IllegalArgumentException("La categoría ya existe");
         }
@@ -36,9 +33,8 @@ public class CategoryCommandService implements CategoryCommandUseCase {
                 .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
 
         Category changes = mapper.toDomain(request);
-        validate(changes);
         if (!changes.getName().equals(current.getName()) && repo.existsByName(changes.getName())) {
-            throw new IllegalArgumentException("Ya existe un producto con ese nombre");
+            throw new IllegalArgumentException("Ya existe una categoría con ese nombre");
         }
         changes.setId(current.getId());
 
@@ -52,6 +48,5 @@ public class CategoryCommandService implements CategoryCommandUseCase {
                 .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
         repo.deleteById(id);
     }
-
 
 }
