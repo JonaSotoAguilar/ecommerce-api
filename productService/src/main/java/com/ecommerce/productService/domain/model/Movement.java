@@ -4,7 +4,7 @@ package com.ecommerce.productService.domain.model;
 import com.ecommerce.productService.domain.model.constant.MovementType;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Getter
 @Setter
@@ -15,9 +15,7 @@ public class Movement {
     private Long id;
     private MovementType type;
     private Integer quantity;
-    private String note;
-    private LocalDateTime createdAt;
+    private String reference;
+    private OffsetDateTime movementDate;
     private Product product;
-
-    //FIXME: Cambiar createdAt por movement_date Y nota a reference
 }

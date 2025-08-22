@@ -32,6 +32,14 @@ public class ProductQueryService implements ProductQueryUseCase {
         return mapper.toDtoList(repo.findAll());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public ProductDto getByBarcode(String barcode) {
+        return repo.findByBarcode(barcode)
+                .map(mapper::toDto)
+                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+    }
+
     // Filters
 
     @Override

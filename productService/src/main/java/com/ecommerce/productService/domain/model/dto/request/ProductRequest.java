@@ -6,6 +6,13 @@ import java.math.BigDecimal;
 
 public record ProductRequest(
 
+        @NotNull(message = "El barcode de producto es obligatorio")
+        @Pattern(
+                regexp = "^(\\d{8}|\\d{12}|\\d{13}|\\d{14})$",    // GTIN: EAN-8, UPC-A (12), EAN-13, GTIN-14
+                message = "El código de barras debe tener 8, 12, 13 o 14 dígitos"
+        )
+        String barcode,
+
         @NotBlank(message = "El nombre es obligatorio")
         @Size(max = 50, message = "El nombre no puede superar los 50 caracteres")
         String name,

@@ -5,16 +5,13 @@ import com.ecommerce.productService.infrastructure.persistence.entity.ProductEnt
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {CategoryDboMapper.class})
 public interface ProductDboMapper {
-    @Mappings({
-            @Mapping(target = "createdAt", ignore = true),
-            @Mapping(target = "updatedAt", ignore = true),
-    })
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     ProductEntity toDbo(Product domain);
 
     @InheritInverseConfiguration

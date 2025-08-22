@@ -29,6 +29,11 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     }
 
     @Override
+    public Optional<Product> findByBarcode(String barcode) {
+        return db.findByBarcode(barcode).map(mapper::toDomain);
+    }
+
+    @Override
     public List<Product> findAll() {
         return mapper.toDomainList(db.findAll());
     }
@@ -41,6 +46,11 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     @Override
     public boolean existsByName(String name) {
         return db.existsByName(name);
+    }
+
+    @Override
+    public boolean existsByBarcode(String barcode) {
+        return db.existsByBarcode(barcode);
     }
 
     // --- Filtros ---

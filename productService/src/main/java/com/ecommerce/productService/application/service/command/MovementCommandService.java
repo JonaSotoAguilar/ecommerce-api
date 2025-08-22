@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.ecommerce.productService.domain.service.MovementValidationService.validate;
-
 @Service
 @RequiredArgsConstructor
 public class MovementCommandService implements MovementCommandUseCase {
@@ -26,7 +24,6 @@ public class MovementCommandService implements MovementCommandUseCase {
     public MovementDto create(MovementRequest request) {
         Movement movementDomain = mapper.toDomain(request);
 
-        validate(movementDomain);
         productRepo.findById(movementDomain.getProduct().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
 

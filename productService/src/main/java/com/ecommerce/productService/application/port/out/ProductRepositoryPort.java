@@ -10,11 +10,15 @@ public interface ProductRepositoryPort {
 
     Optional<Product> findById(Long id);
 
+    Optional<Product> findByBarcode(String barcode);
+
     List<Product> findAll();
 
     void deleteById(Long id);
 
     boolean existsByName(String name);
+
+    boolean existsByBarcode(String barcode);
 
     // Filters
 

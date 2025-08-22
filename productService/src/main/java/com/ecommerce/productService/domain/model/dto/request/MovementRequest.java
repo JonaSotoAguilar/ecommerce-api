@@ -7,14 +7,15 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record MovementRequest(
+        @NotNull(message = "El tipo de movimiento es obligatorio")
         MovementType type,
 
         @NotNull(message = "La cantidad es obligatoria")
         @Min(value = 1, message = "La cantidad mínima es 1")
         Integer quantity,
 
-        @Size(max = 50, message = "La nota no puede superar los 50 caracteres")
-        String note,
+        @Size(max = 50, message = "La referencia no puede superar los 50 caracteres")
+        String reference,
 
         @NotNull(message = "El producto es obligatorio")
         @Positive(message = "El id del producto debe ser positivo")

@@ -11,11 +11,10 @@ import java.math.BigDecimal;
 @Builder
 public class Product {
     private Long id;
+    private String barcode;
     private String name;
     private String description;
     private BigDecimal price;
     private Integer stock;
     private Category category;
-
-    //FIXME: Agregar barrcode y status
 }

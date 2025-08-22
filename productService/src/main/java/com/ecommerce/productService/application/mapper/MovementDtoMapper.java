@@ -12,6 +12,7 @@ import java.util.List;
 public interface MovementDtoMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "productId", target = "product")
+    @Mapping(target = "movementDate", ignore = true)
     Movement toDomain(MovementRequest req);
 
     @Mapping(source = "product", target = "productId")

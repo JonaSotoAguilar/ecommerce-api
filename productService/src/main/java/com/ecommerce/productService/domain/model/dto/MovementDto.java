@@ -2,6 +2,8 @@ package com.ecommerce.productService.domain.model.dto;
 
 import lombok.*;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -9,11 +11,9 @@ import lombok.*;
 @Builder
 public class MovementDto {
     private Long id;
+    private Long productId;
     private String type;
     private Integer quantity;
-    private String note;
-    private String createdAt;
-    private Long productId;
-
-    // FIXME: Cambiar createdAt por movement_date y note a reference
+    private String reference;
+    private OffsetDateTime movementDate;
 }
