@@ -3,14 +3,15 @@ package com.ecommerce.productService.infrastructure.persistence.entity;
 import com.ecommerce.productService.domain.model.constant.MovementType;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Immutable;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.OffsetDateTime;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
-@Immutable
 @Table(name = "movement",
         indexes = @Index(name = "idx_movement_product", columnList = "product_id"))
 @Getter
@@ -28,18 +29,31 @@ public class MovementEntity {
     @Column(nullable = false)
     private MovementType type;
 
+    @Column(name = "stock_before", nullable = false)
+    private Integer stockBefore;
+
     @Column(nullable = false)
     private Integer quantity;
 
+    @Column(name = "unit_cost_before", nullable = false, precision = 19, scale = 4)
+    private BigDecimal unitCostBefore;
+
+    @Column(name = "unit_cost", nullable = false, precision = 19, scale = 4)
+    private BigDecimal unitCost;
+
     private String reference;
 
+    @Column(name = "product_name_snapshot")
+    private String productNameSnapshot;
+
     // --- Product relationship ---
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    @NotFound(action = NotFoundAction.IGNORE)
     private ProductEntity product;
 
     // --- audit ---
     @CreatedDate
     @Column(name = "movement_date", updatable = false)
-    private OffsetDateTime movementDate;
+    private LocalDateTime movementDate;
 }

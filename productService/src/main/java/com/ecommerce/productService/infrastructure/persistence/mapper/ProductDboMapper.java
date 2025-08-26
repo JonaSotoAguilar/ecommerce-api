@@ -10,6 +10,11 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {CategoryDboMapper.class})
 public interface ProductDboMapper {
+
+    @Mapping(target = "barcode", source = "barcode.value")
+    @Mapping(target = "price", source = "pricing.price")
+    @Mapping(target = "averageCost", source = "pricing.averageCost")
+    @Mapping(target = "stock", source = "stock.value")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     ProductEntity toDbo(Product domain);

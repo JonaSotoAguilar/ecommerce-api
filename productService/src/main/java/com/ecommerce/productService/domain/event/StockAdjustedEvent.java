@@ -1,13 +1,11 @@
-package com.ecommerce.productService.domain.model;
-
+package com.ecommerce.productService.domain.event;
 
 import com.ecommerce.productService.domain.model.constant.MovementType;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
-public record Movement(
-        Long id,
+public record StockAdjustedEvent(
         MovementType type,
         Integer stockBefore,
         Integer quantity,
@@ -15,6 +13,7 @@ public record Movement(
         BigDecimal unitCost,
         String reference,
         String productNameSnapshot,
-        LocalDateTime movementDate,
-        Product product) {
+        Long productId,
+        OffsetDateTime occurredAt
+) implements DomainEvent {
 }

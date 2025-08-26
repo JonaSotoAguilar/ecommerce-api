@@ -1,7 +1,7 @@
 package com.ecommerce.productService.infrastructure.persistence.adapter;
 
-import com.ecommerce.productService.application.port.out.MovementRepositoryPort;
 import com.ecommerce.productService.domain.model.Movement;
+import com.ecommerce.productService.domain.port.MovementRepositoryPort;
 import com.ecommerce.productService.infrastructure.persistence.mapper.MovementDboMapper;
 import com.ecommerce.productService.infrastructure.persistence.repository.SpringDataMovementRepository;
 import lombok.RequiredArgsConstructor;
