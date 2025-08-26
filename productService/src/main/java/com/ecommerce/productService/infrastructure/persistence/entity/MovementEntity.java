@@ -35,8 +35,8 @@ public class MovementEntity {
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(name = "unit_cost_before", nullable = false, precision = 19, scale = 4)
-    private BigDecimal unitCostBefore;
+    @Column(name = "average_cost_before", nullable = false, precision = 19, scale = 4)
+    private BigDecimal averageCostBefore;
 
     @Column(name = "unit_cost", nullable = false, precision = 19, scale = 4)
     private BigDecimal unitCost;

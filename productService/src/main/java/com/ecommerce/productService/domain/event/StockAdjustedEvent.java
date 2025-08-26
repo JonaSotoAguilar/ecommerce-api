@@ -9,7 +9,7 @@ public record StockAdjustedEvent(
         MovementType type,
         Integer stockBefore,
         Integer quantity,
-        BigDecimal unitCostBefore,
+        BigDecimal averageCostBefore,
         BigDecimal unitCost,
         String reference,
         String productNameSnapshot,
