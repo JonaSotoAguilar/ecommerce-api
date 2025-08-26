@@ -1,7 +1,7 @@
 package com.ecommerce.productService.infrastructure.persistence.adapter;
 
-import com.ecommerce.productService.application.port.out.CategoryRepositoryPort;
 import com.ecommerce.productService.domain.model.Category;
+import com.ecommerce.productService.domain.port.CategoryRepositoryPort;
 import com.ecommerce.productService.infrastructure.persistence.mapper.CategoryDboMapper;
 import com.ecommerce.productService.infrastructure.persistence.repository.SpringDataCategoryRepository;
 import lombok.RequiredArgsConstructor;

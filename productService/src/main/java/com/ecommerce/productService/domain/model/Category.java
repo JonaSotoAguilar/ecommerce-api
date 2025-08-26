@@ -1,14 +1,12 @@
 package com.ecommerce.productService.domain.model;
 
-import lombok.*;
+public record Category(
+        Long id,
+        String name,
+        String description) {
 
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class Category {
-    private Long id;
-    private String name;
-    private String description;
+    public static Category reference(Long id) {
+        if (id == null) throw new IllegalArgumentException("id null");
+        return new Category(id, null, null);
+    }
 }

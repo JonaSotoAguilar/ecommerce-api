@@ -2,18 +2,20 @@ package com.ecommerce.productService.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.SoftDelete;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 
 @Getter
 @Setter
-@Builder(toBuilder = true)
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -26,10 +28,10 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     private String barcode;
 
-    @Column(nullable = false, length = 50, unique = true)
+    @Column(nullable = false, length = 50)
     private String name;
 
     @Column(columnDefinition = "TEXT")
@@ -38,21 +40,24 @@ public class ProductEntity {
     @Column(nullable = false, precision = 19, scale = 4)
     private BigDecimal price;
 
+    @Column(name = "average_cost", nullable = false, precision = 19, scale = 4)
+    private BigDecimal averageCost;
+
     @Column(nullable = false)
     private Integer stock;
 
     // --- Category relationship (optional) ---
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id",
-            foreignKey = @ForeignKey(name = "fk_product_category"))
+    @JoinColumn(name = "category_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private CategoryEntity category;
 
     // --- audit ---
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updatedAt;
+    private LocalDateTime updatedAt;
 }

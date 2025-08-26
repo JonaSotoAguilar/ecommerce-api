@@ -1,12 +1,11 @@
-package com.ecommerce.productService.domain.model;
-
+package com.ecommerce.productService.application.dto;
 
 import com.ecommerce.productService.domain.model.constant.MovementType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record Movement(
+public record MovementDto(
         Long id,
         MovementType type,
         Integer stockBefore,
@@ -15,6 +14,7 @@ public record Movement(
         BigDecimal unitCost,
         String reference,
         String productNameSnapshot,
-        LocalDateTime movementDate,
-        Product product) {
+        Long productId,
+        LocalDateTime movementDate
+) {
 }
