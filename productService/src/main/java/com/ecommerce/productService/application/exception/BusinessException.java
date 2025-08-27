@@ -1,7 +1,5 @@
 package com.ecommerce.productservice.application.exception;
 
-import com.ecommerce.productservice.application.constant.ErrorCode;
-
 public class BusinessException extends RuntimeException {
     private final ErrorCode code;
 

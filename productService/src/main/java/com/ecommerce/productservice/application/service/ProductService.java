@@ -1,12 +1,13 @@
 package com.ecommerce.productservice.application.service;
 
-import com.ecommerce.productservice.application.constant.ErrorCode;
 import com.ecommerce.productservice.application.dto.ProductDto;
 import com.ecommerce.productservice.application.exception.BusinessException;
+import com.ecommerce.productservice.application.exception.ErrorCode;
 import com.ecommerce.productservice.application.mapper.ProductDtoMapper;
 import com.ecommerce.productservice.application.usecase.ProductCrudUseCase;
 import com.ecommerce.productservice.application.usecase.SearchProductsUseCase;
 import com.ecommerce.productservice.application.usecase.StockAdjustUseCase;
+import com.ecommerce.productservice.domain.model.Category;
 import com.ecommerce.productservice.domain.model.product.Product;
 import com.ecommerce.productservice.domain.port.CategoryRepositoryPort;
 import com.ecommerce.productservice.domain.port.ProductRepositoryPort;
@@ -35,7 +36,7 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
     public ProductDto create(ProductDto product) {
         Product newProduct = mapper.toDomain(product);
         validateUniquenessOnCreate(newProduct);
-        assertCategoryExists(newProduct.getCategory().id());
+        newProduct.setCategory(getCategoryOrThrow(newProduct.getCategory().id()));
 
         Product created = repo.save(newProduct);
         created.createInitialStock();
@@ -70,7 +71,7 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
         Product changes = mapper.toDomain(product);
 
         validateUniquenessOnUpdate(current, changes);
-        assertCategoryExists(changes.getCategory().id());
+        changes.setCategory(getCategoryOrThrow(changes.getCategory().id()));
 
         if (!changes.getStock().equals(current.getStock())) {
             withProductMutated(current.getId(), p -> p.adjustStock(
@@ -121,7 +122,7 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
     @Override
     @Transactional(readOnly = true)
     public List<ProductDto> getAllByCategory(Long categoryId) {
-        assertCategoryExists(categoryId);
+        getCategoryOrThrow(categoryId);
 
         return mapper.toDtoList(repo.findAllByCategoryId(categoryId));
     }
@@ -139,13 +140,6 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
     }
 
     //  --- Validations & Helpers ---
-
-    private void assertCategoryExists(Long categoryId) {
-        if (categoryId != null) {
-            categoryRepo.findById(categoryId)
-                    .orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
-        }
-    }
 
     private void assertNameAvailable(String name) {
         if (repo.existsByName(name)) {
@@ -171,6 +165,14 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
         if (!changes.getBarcode().equals(current.getBarcode())) {
             assertBarcodeAvailable(changes.getBarcode().value());
         }
+    }
+
+    private Category getCategoryOrThrow(Long categoryId) {
+        if (categoryId != null) {
+            return categoryRepo.findById(categoryId)
+                    .orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
+        }
+        return null;
     }
 
     private Product getProductOrThrow(Long id) {

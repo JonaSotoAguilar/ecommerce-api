@@ -11,7 +11,7 @@
     <groupId>com.ecommerce</groupId>
     <artifactId>productservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>productService</name>
+    <name>productservice</name>
     <description>Product Service</description>
     <url/>
     <licenses>

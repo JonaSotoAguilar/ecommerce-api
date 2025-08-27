@@ -15,7 +15,8 @@ public interface ProductDtoMapper {
     @Mapping(target = "stock", source = "stock.value")
     @Mapping(target = "price", source = "pricing.price")
     @Mapping(target = "averageCost", source = "pricing.averageCost")
-    @Mapping(target = "categoryId", source = "category")
+    @Mapping(target = "categoryId", source = "category.id")
+    @Mapping(target = "categoryName", source = "category.name")
     ProductDto toDto(Product domain);
 
     @InheritInverseConfiguration
@@ -29,8 +30,8 @@ public interface ProductDtoMapper {
     }
 
     // Product -> Long (extraer id)
-    default Long map(Product product) {
-        return product != null ? product.getId() : null;
-    }
+//    default Long map(Product product) {
+//        return product != null ? product.getId() : null;
+//    }
 }
 

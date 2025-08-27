@@ -10,6 +10,7 @@ public record ProductDto(
         BigDecimal price,
         BigDecimal averageCost,
         Integer stock,
-        Long categoryId
+        Long categoryId,
+        String categoryName
 ) {
 }

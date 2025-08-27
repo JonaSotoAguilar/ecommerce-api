@@ -1,12 +1,12 @@
 package com.ecommerce.productservice.infrastructure.web.controller;
 
-import com.ecommerce.productservice.application.dto.ProductDto;
 import com.ecommerce.productservice.application.usecase.ProductCrudUseCase;
 import com.ecommerce.productservice.application.usecase.SearchProductsUseCase;
 import com.ecommerce.productservice.application.usecase.StockAdjustUseCase;
-import com.ecommerce.productservice.infrastructure.web.mapper.UserWebMapper;
+import com.ecommerce.productservice.infrastructure.web.mapper.ProductWebMapper;
 import com.ecommerce.productservice.infrastructure.web.request.ProductRequest;
 import com.ecommerce.productservice.infrastructure.web.request.StockRequest;
+import com.ecommerce.productservice.infrastructure.web.response.ProductResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -24,33 +24,33 @@ public class ProductController {
     private final ProductCrudUseCase crud;
     private final SearchProductsUseCase search;
     private final StockAdjustUseCase stock;
-    private final UserWebMapper mapper;
+    private final ProductWebMapper mapper;
 
     // --- CRUD Operations ---
 
     @PostMapping
-    public ResponseEntity<ProductDto> create(@Valid @RequestBody ProductRequest req) {
-        return ResponseEntity.ok(crud.create(mapper.toDto(req)));
+    public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest req) {
+        return ResponseEntity.ok(mapper.toResponse(crud.create(mapper.toDto(req))));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(crud.getById(id));
+    public ResponseEntity<ProductResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(mapper.toResponse(crud.getById(id)));
     }
 
     @GetMapping("/barcode/{barcode}")
-    public ResponseEntity<ProductDto> getByBarcode(@PathVariable String barcode) {
-        return ResponseEntity.ok(crud.getByBarcode(barcode));
+    public ResponseEntity<ProductResponse> getByBarcode(@PathVariable String barcode) {
+        return ResponseEntity.ok(mapper.toResponse(crud.getByBarcode(barcode)));
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getAll() {
-        return ResponseEntity.ok(crud.getAll());
+    public ResponseEntity<List<ProductResponse>> getAll() {
+        return ResponseEntity.ok(mapper.toResponseList(crud.getAll()));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDto> update(@PathVariable Long id, @Valid @RequestBody ProductRequest req) {
-        return ResponseEntity.ok(crud.update(mapper.toDto(id, req)));
+    public ResponseEntity<ProductResponse> update(@PathVariable Long id, @Valid @RequestBody ProductRequest req) {
+        return ResponseEntity.ok(mapper.toResponse(crud.update(mapper.toDto(id, req))));
     }
 
     @DeleteMapping("/{id}")
@@ -88,17 +88,17 @@ public class ProductController {
     // --- Filters Operations ---
 
     @GetMapping("/by-category/{categoryId}")
-    public ResponseEntity<List<ProductDto>> getAllByCategory(@PathVariable Long categoryId) {
-        return ResponseEntity.ok(search.getAllByCategory(categoryId));
+    public ResponseEntity<List<ProductResponse>> byCategory(@PathVariable Long categoryId) {
+        return ResponseEntity.ok(mapper.toResponseList(search.getAllByCategory(categoryId)));
     }
 
     @GetMapping("/under-price")
-    public ResponseEntity<List<ProductDto>> getAllUnderPrice(@RequestParam("max") @Min(0) BigDecimal maxPrice) {
-        return ResponseEntity.ok(search.getAllUnderPrice(maxPrice));
+    public ResponseEntity<List<ProductResponse>> underPrice(@RequestParam("max") @Min(0) BigDecimal maxPrice) {
+        return ResponseEntity.ok(mapper.toResponseList(search.getAllUnderPrice(maxPrice)));
     }
 
     @GetMapping("/under-stock")
-    public ResponseEntity<List<ProductDto>> getAllUnderStock(@RequestParam("max") @Min(0) Integer maxStock) {
-        return ResponseEntity.ok(search.getAllUnderStock(maxStock));
+    public ResponseEntity<List<ProductResponse>> underStock(@RequestParam("max") @Min(0) Integer maxStock) {
+        return ResponseEntity.ok(mapper.toResponseList(search.getAllUnderStock(maxStock)));
     }
 }

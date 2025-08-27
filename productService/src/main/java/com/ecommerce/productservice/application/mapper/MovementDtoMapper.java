@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {ProductDtoMapper.class})
 public interface MovementDtoMapper {
 
-    @Mapping(source = "product.id", target = "productId")
+    @Mapping(target = "productId", source = "product.id")
     MovementDto toDto(Movement movement);
 
     List<MovementDto> toDtoList(List<Movement> movements);

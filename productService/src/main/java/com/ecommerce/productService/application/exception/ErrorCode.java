@@ -1,4 +1,4 @@
-package com.ecommerce.productservice.application.constant;
+package com.ecommerce.productservice.application.exception;
 
 public enum ErrorCode {
     PRODUCT_NOT_FOUND(404, "Producto no encontrado"),

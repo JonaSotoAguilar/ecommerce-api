@@ -1,8 +1,8 @@
 package com.ecommerce.productservice.application.service;
 
-import com.ecommerce.productservice.application.constant.ErrorCode;
 import com.ecommerce.productservice.application.dto.CategoryDto;
 import com.ecommerce.productservice.application.exception.BusinessException;
+import com.ecommerce.productservice.application.exception.ErrorCode;
 import com.ecommerce.productservice.application.mapper.CategoryDtoMapper;
 import com.ecommerce.productservice.application.usecase.CategoryCrudUseCase;
 import com.ecommerce.productservice.domain.model.Category;

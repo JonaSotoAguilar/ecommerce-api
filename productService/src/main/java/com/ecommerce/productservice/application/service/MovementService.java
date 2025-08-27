@@ -1,8 +1,8 @@
 package com.ecommerce.productservice.application.service;
 
-import com.ecommerce.productservice.application.constant.ErrorCode;
 import com.ecommerce.productservice.application.dto.MovementDto;
 import com.ecommerce.productservice.application.exception.BusinessException;
+import com.ecommerce.productservice.application.exception.ErrorCode;
 import com.ecommerce.productservice.application.mapper.MovementDtoMapper;
 import com.ecommerce.productservice.application.usecase.MovementCrudCase;
 import com.ecommerce.productservice.application.usecase.SearchMovementUseCase;
@@ -19,7 +19,6 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class MovementService implements MovementCrudCase, SearchMovementUseCase {
-
     private final MovementRepositoryPort repo;
     private final MovementDtoMapper mapper;
 
@@ -55,5 +54,4 @@ public class MovementService implements MovementCrudCase, SearchMovementUseCase 
         return repo.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.MOVEMENT_NOT_FOUND));
     }
-
 }

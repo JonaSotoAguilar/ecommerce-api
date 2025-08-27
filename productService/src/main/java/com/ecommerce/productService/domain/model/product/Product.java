@@ -14,9 +14,9 @@ import java.util.List;
 public final class Product {
     private final Long id;
     private final String description;
-    private final Category category;
     private final Barcode barcode;
     private final List<DomainEvent> domainEvents = new ArrayList<>();
+    private Category category;
     private Pricing pricing;
     private Stock stock;
     private String name;
@@ -104,7 +104,7 @@ public final class Product {
                 previousStock,
                 qty,
                 pricing.averageCost(),
-                null,
+                pricing.averageCost(),
                 reference
         );
     }
@@ -120,7 +120,7 @@ public final class Product {
                 previousStock,
                 qty,
                 pricing.averageCost(),
-                null,
+                pricing.averageCost(),
                 reference
         );
     }
@@ -163,7 +163,7 @@ public final class Product {
         return out;
     }
 
-    // -- Getters --
+    // -- Getters & Setters --
 
     public Long getId() {
         return id;
@@ -175,6 +175,10 @@ public final class Product {
 
     public Category getCategory() {
         return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public Barcode getBarcode() {

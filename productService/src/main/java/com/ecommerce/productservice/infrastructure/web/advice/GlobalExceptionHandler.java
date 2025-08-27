@@ -1,7 +1,7 @@
 package com.ecommerce.productservice.infrastructure.web.advice;
 
-import com.ecommerce.productservice.application.constant.ErrorCode;
 import com.ecommerce.productservice.application.exception.BusinessException;
+import com.ecommerce.productservice.application.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 400 - BusinessException
+    // 4xx - errores de negocio
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiError> handleBusiness(BusinessException ex, HttpServletRequest req) {
         var ec = ex.getCode();

@@ -21,7 +21,7 @@ public interface CategoryDtoMapper {
     }
 
     // Category -> Long (extraer id)
-    default Long map(Category category) {
-        return category != null ? category.id() : null;
-    }
+//    default Long map(Category category) {
+//        return category != null ? category.id() : null;
+//    }
 }
