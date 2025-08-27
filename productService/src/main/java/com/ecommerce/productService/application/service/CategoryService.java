@@ -1,10 +1,12 @@
-package com.ecommerce.productService.application.service;
+package com.ecommerce.productservice.application.service;
 
-import com.ecommerce.productService.application.dto.CategoryDto;
-import com.ecommerce.productService.application.mapper.CategoryDtoMapper;
-import com.ecommerce.productService.application.usecase.CategoryCrudUseCase;
-import com.ecommerce.productService.domain.model.Category;
-import com.ecommerce.productService.domain.port.CategoryRepositoryPort;
+import com.ecommerce.productservice.application.constant.ErrorCode;
+import com.ecommerce.productservice.application.dto.CategoryDto;
+import com.ecommerce.productservice.application.exception.BusinessException;
+import com.ecommerce.productservice.application.mapper.CategoryDtoMapper;
+import com.ecommerce.productservice.application.usecase.CategoryCrudUseCase;
+import com.ecommerce.productservice.domain.model.Category;
+import com.ecommerce.productservice.domain.port.CategoryRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,9 +33,7 @@ public class CategoryService implements CategoryCrudUseCase {
     @Override
     @Transactional(readOnly = true)
     public CategoryDto getById(Long id) {
-        return repo.findById(id)
-                .map(mapper::toDto)
-                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+        return mapper.toDto(getCategoryOrThrow(id));
     }
 
     @Override
@@ -44,10 +44,9 @@ public class CategoryService implements CategoryCrudUseCase {
 
     @Override
     public CategoryDto update(CategoryDto category) {
-        Category current = repo.findById(category.id())
-                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
-
+        Category current = getCategoryOrThrow(category.id());
         Category changes = mapper.toDomain(category);
+
         if (!changes.name().equals(current.name())) {
             existsName(changes.name());
         }
@@ -57,16 +56,20 @@ public class CategoryService implements CategoryCrudUseCase {
 
     @Override
     public void delete(Long id) {
-        repo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+        getCategoryOrThrow(id);
         repo.deleteById(id);
     }
 
-    // -- Validations --
+    // -- Validations & Helpers --
+
+    private Category getCategoryOrThrow(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
+    }
 
     private void existsName(String name) {
         if (repo.existsByName(name)) {
-            throw new IllegalArgumentException("La categoría ya existe");
+            throw new BusinessException(ErrorCode.CATEGORY_NAME_DUPLICATED);
         }
     }
 

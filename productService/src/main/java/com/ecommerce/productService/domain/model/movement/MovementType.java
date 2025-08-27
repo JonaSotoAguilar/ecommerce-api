@@ -1,4 +1,4 @@
-package com.ecommerce.productService.domain.model.constant;
+package com.ecommerce.productservice.domain.model.movement;
 
 public enum MovementType {
     IN,

@@ -1,4 +1,4 @@
-package com.ecommerce.productService.application.dto;
+package com.ecommerce.productservice.application.dto;
 
 public record CategoryDto(
         Long id,

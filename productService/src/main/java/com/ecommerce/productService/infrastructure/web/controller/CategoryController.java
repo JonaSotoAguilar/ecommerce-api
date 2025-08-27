@@ -1,9 +1,9 @@
-package com.ecommerce.productService.infrastructure.web.controller;
+package com.ecommerce.productservice.infrastructure.web.controller;
 
-import com.ecommerce.productService.application.dto.CategoryDto;
-import com.ecommerce.productService.application.usecase.CategoryCrudUseCase;
-import com.ecommerce.productService.infrastructure.web.mapper.CategoryWebMapper;
-import com.ecommerce.productService.infrastructure.web.request.CategoryRequest;
+import com.ecommerce.productservice.application.dto.CategoryDto;
+import com.ecommerce.productservice.application.usecase.CategoryCrudUseCase;
+import com.ecommerce.productservice.infrastructure.web.mapper.CategoryWebMapper;
+import com.ecommerce.productservice.infrastructure.web.request.CategoryRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

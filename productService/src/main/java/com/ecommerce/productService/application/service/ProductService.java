@@ -1,13 +1,15 @@
-package com.ecommerce.productService.application.service;
+package com.ecommerce.productservice.application.service;
 
-import com.ecommerce.productService.application.dto.ProductDto;
-import com.ecommerce.productService.application.mapper.ProductDtoMapper;
-import com.ecommerce.productService.application.usecase.ProductCrudUseCase;
-import com.ecommerce.productService.application.usecase.SearchProductsUseCase;
-import com.ecommerce.productService.application.usecase.StockAdjustUseCase;
-import com.ecommerce.productService.domain.model.Product;
-import com.ecommerce.productService.domain.port.CategoryRepositoryPort;
-import com.ecommerce.productService.domain.port.ProductRepositoryPort;
+import com.ecommerce.productservice.application.constant.ErrorCode;
+import com.ecommerce.productservice.application.dto.ProductDto;
+import com.ecommerce.productservice.application.exception.BusinessException;
+import com.ecommerce.productservice.application.mapper.ProductDtoMapper;
+import com.ecommerce.productservice.application.usecase.ProductCrudUseCase;
+import com.ecommerce.productservice.application.usecase.SearchProductsUseCase;
+import com.ecommerce.productservice.application.usecase.StockAdjustUseCase;
+import com.ecommerce.productservice.domain.model.product.Product;
+import com.ecommerce.productservice.domain.port.CategoryRepositoryPort;
+import com.ecommerce.productservice.domain.port.ProductRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -21,11 +23,6 @@ import java.util.function.Consumer;
 @Transactional
 @RequiredArgsConstructor
 public class ProductService implements ProductCrudUseCase, SearchProductsUseCase, StockAdjustUseCase {
-
-    private static final String ERR_PRODUCTO_NO_ENCONTRADO = "Producto no encontrado";
-    private static final String ERR_CATEGORIA_NO_ENCONTRADA = "Categoría no encontrada";
-    private static final String ERR_PRODUCTO_NOMBRE_DUPLICADO = "Ya existe un producto con ese nombre";
-    private static final String ERR_PRODUCTO_BARCODE_DUPLICADO = "Ya existe un producto con ese código de barras";
 
     private final ProductRepositoryPort repo;
     private final CategoryRepositoryPort categoryRepo;
@@ -64,7 +61,7 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
     public ProductDto getByBarcode(String barcode) {
         return repo.findByBarcode(barcode)
                 .map(mapper::toDto)
-                .orElseThrow(() -> new IllegalArgumentException(ERR_PRODUCTO_NO_ENCONTRADO));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
     @Override
@@ -123,7 +120,7 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductDto> byCategory(Long categoryId) {
+    public List<ProductDto> getAllByCategory(Long categoryId) {
         assertCategoryExists(categoryId);
 
         return mapper.toDtoList(repo.findAllByCategoryId(categoryId));
@@ -131,13 +128,13 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductDto> underPrice(BigDecimal maxPrice) {
+    public List<ProductDto> getAllUnderPrice(BigDecimal maxPrice) {
         return mapper.toDtoList(repo.findAllByPriceLessOrEqual(maxPrice));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductDto> underStock(Integer maxStock) {
+    public List<ProductDto> getAllUnderStock(Integer maxStock) {
         return mapper.toDtoList(repo.findAllByStockLessOrEqual(maxStock));
     }
 
@@ -146,19 +143,19 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
     private void assertCategoryExists(Long categoryId) {
         if (categoryId != null) {
             categoryRepo.findById(categoryId)
-                    .orElseThrow(() -> new IllegalArgumentException(ERR_CATEGORIA_NO_ENCONTRADA));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
         }
     }
 
     private void assertNameAvailable(String name) {
         if (repo.existsByName(name)) {
-            throw new IllegalArgumentException(ERR_PRODUCTO_NOMBRE_DUPLICADO);
+            throw new BusinessException(ErrorCode.PRODUCT_NAME_DUPLICATED);
         }
     }
 
     private void assertBarcodeAvailable(String barcode) {
         if (repo.existsByBarcode(barcode)) {
-            throw new IllegalArgumentException(ERR_PRODUCTO_BARCODE_DUPLICADO);
+            throw new BusinessException(ErrorCode.PRODUCT_BARCODE_DUPLICATED);
         }
     }
 
@@ -178,7 +175,7 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
 
     private Product getProductOrThrow(Long id) {
         return repo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(ERR_PRODUCTO_NO_ENCONTRADO));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
     private void withProductMutated(Long productId, Consumer<Product> mutator) {

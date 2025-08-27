@@ -1,9 +1,9 @@
-package com.ecommerce.productService.infrastructure.persistence.adapter;
+package com.ecommerce.productservice.infrastructure.persistence.adapter;
 
-import com.ecommerce.productService.domain.model.Product;
-import com.ecommerce.productService.domain.port.ProductRepositoryPort;
-import com.ecommerce.productService.infrastructure.persistence.mapper.ProductDboMapper;
-import com.ecommerce.productService.infrastructure.persistence.repository.SpringDataProductRepository;
+import com.ecommerce.productservice.domain.model.product.Product;
+import com.ecommerce.productservice.domain.port.ProductRepositoryPort;
+import com.ecommerce.productservice.infrastructure.persistence.mapper.ProductDboMapper;
+import com.ecommerce.productservice.infrastructure.persistence.repository.SpringDataProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

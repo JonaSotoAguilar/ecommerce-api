@@ -1,14 +1,14 @@
-package com.ecommerce.productService.application.usecase;
+package com.ecommerce.productservice.application.usecase;
 
-import com.ecommerce.productService.application.dto.ProductDto;
+import com.ecommerce.productservice.application.dto.ProductDto;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public interface SearchProductsUseCase {
-    List<ProductDto> byCategory(Long categoryId);
+    List<ProductDto> getAllByCategory(Long categoryId);
 
-    List<ProductDto> underPrice(BigDecimal maxPrice);
+    List<ProductDto> getAllUnderPrice(BigDecimal maxPrice);
 
-    List<ProductDto> underStock(Integer maxStock);
+    List<ProductDto> getAllUnderStock(Integer maxStock);
 }

@@ -1,6 +1,6 @@
-package com.ecommerce.productService.application.dto;
+package com.ecommerce.productservice.application.dto;
 
-import com.ecommerce.productService.domain.model.constant.MovementType;
+import com.ecommerce.productservice.domain.model.movement.MovementType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

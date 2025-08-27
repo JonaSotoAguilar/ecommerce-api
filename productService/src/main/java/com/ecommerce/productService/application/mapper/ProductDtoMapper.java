@@ -1,7 +1,7 @@
-package com.ecommerce.productService.application.mapper;
+package com.ecommerce.productservice.application.mapper;
 
-import com.ecommerce.productService.application.dto.ProductDto;
-import com.ecommerce.productService.domain.model.Product;
+import com.ecommerce.productservice.application.dto.ProductDto;
+import com.ecommerce.productservice.domain.model.product.Product;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

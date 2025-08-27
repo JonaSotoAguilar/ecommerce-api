@@ -1,4 +1,4 @@
-package com.ecommerce.productService.domain.model;
+package com.ecommerce.productservice.domain.model;
 
 public record Category(
         Long id,

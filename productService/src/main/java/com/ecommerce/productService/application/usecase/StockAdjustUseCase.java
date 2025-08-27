@@ -1,4 +1,4 @@
-package com.ecommerce.productService.application.usecase;
+package com.ecommerce.productservice.application.usecase;
 
 import java.math.BigDecimal;
 

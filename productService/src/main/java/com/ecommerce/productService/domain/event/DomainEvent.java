@@ -1,4 +1,4 @@
-package com.ecommerce.productService.domain.event;
+package com.ecommerce.productservice.domain.event;
 
 import java.time.OffsetDateTime;
 

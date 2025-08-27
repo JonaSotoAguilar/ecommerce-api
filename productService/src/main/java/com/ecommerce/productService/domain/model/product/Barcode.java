@@ -1,4 +1,4 @@
-package com.ecommerce.productService.domain.model.vo;
+package com.ecommerce.productservice.domain.model.product;
 
 import java.util.regex.Pattern;
 

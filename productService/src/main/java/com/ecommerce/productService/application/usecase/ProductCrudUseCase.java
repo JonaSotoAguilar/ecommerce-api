@@ -1,6 +1,6 @@
-package com.ecommerce.productService.application.usecase;
+package com.ecommerce.productservice.application.usecase;
 
-import com.ecommerce.productService.application.dto.ProductDto;
+import com.ecommerce.productservice.application.dto.ProductDto;
 
 import java.util.List;
 

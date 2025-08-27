@@ -1,7 +1,7 @@
-package com.ecommerce.productService.infrastructure.persistence.mapper;
+package com.ecommerce.productservice.infrastructure.persistence.mapper;
 
-import com.ecommerce.productService.domain.model.Product;
-import com.ecommerce.productService.infrastructure.persistence.entity.ProductEntity;
+import com.ecommerce.productservice.domain.model.product.Product;
+import com.ecommerce.productservice.infrastructure.persistence.entity.ProductEntity;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

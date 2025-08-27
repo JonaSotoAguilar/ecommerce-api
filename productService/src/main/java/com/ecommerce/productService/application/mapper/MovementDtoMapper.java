@@ -1,8 +1,8 @@
-package com.ecommerce.productService.application.mapper;
+package com.ecommerce.productservice.application.mapper;
 
-import com.ecommerce.productService.application.dto.MovementDto;
-import com.ecommerce.productService.domain.event.StockAdjustedEvent;
-import com.ecommerce.productService.domain.model.Movement;
+import com.ecommerce.productservice.application.dto.MovementDto;
+import com.ecommerce.productservice.domain.event.StockAdjustedEvent;
+import com.ecommerce.productservice.domain.model.movement.Movement;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
