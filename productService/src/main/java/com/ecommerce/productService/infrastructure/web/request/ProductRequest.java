@@ -1,4 +1,4 @@
-package com.ecommerce.productService.infrastructure.web.request;
+package com.ecommerce.productservice.infrastructure.web.request;
 
 import jakarta.validation.constraints.*;
 

@@ -1,6 +1,6 @@
-package com.ecommerce.productService.infrastructure.persistence.entity;
+package com.ecommerce.productservice.infrastructure.persistence.entity;
 
-import com.ecommerce.productService.domain.model.constant.MovementType;
+import com.ecommerce.productservice.domain.model.movement.MovementType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.NotFound;

@@ -1,7 +1,7 @@
-package com.ecommerce.productService.application.mapper;
+package com.ecommerce.productservice.application.mapper;
 
-import com.ecommerce.productService.application.dto.CategoryDto;
-import com.ecommerce.productService.domain.model.Category;
+import com.ecommerce.productservice.application.dto.CategoryDto;
+import com.ecommerce.productservice.domain.model.Category;
 import org.mapstruct.Mapper;
 
 import java.util.List;

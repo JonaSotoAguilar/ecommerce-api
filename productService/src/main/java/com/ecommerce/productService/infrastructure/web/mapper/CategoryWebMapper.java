@@ -1,7 +1,7 @@
-package com.ecommerce.productService.infrastructure.web.mapper;
+package com.ecommerce.productservice.infrastructure.web.mapper;
 
-import com.ecommerce.productService.application.dto.CategoryDto;
-import com.ecommerce.productService.infrastructure.web.request.CategoryRequest;
+import com.ecommerce.productservice.application.dto.CategoryDto;
+import com.ecommerce.productservice.infrastructure.web.request.CategoryRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

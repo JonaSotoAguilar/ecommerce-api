@@ -1,5 +1,6 @@
-package com.ecommerce.productService.domain.model.vo;
+package com.ecommerce.productservice.domain.model.vo;
 
+import com.ecommerce.productservice.domain.model.product.Stock;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

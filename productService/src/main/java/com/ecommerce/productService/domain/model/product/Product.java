@@ -1,11 +1,9 @@
-package com.ecommerce.productService.domain.model;
+package com.ecommerce.productservice.domain.model.product;
 
-import com.ecommerce.productService.domain.event.DomainEvent;
-import com.ecommerce.productService.domain.event.StockAdjustedEvent;
-import com.ecommerce.productService.domain.model.constant.MovementType;
-import com.ecommerce.productService.domain.model.vo.Barcode;
-import com.ecommerce.productService.domain.model.vo.Pricing;
-import com.ecommerce.productService.domain.model.vo.Stock;
+import com.ecommerce.productservice.domain.event.DomainEvent;
+import com.ecommerce.productservice.domain.event.StockAdjustedEvent;
+import com.ecommerce.productservice.domain.model.Category;
+import com.ecommerce.productservice.domain.model.movement.MovementType;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -52,93 +50,79 @@ public final class Product {
             return;
         }
 
-        domainEvents.add(new StockAdjustedEvent(
+        addStockAdjustedEvent(
                 MovementType.ADJUST,
                 0,
                 stock.value(),
                 BigDecimal.ZERO,
                 pricing.averageCost(),
-                "Initial Stock",
-                name,
-                id,
-                OffsetDateTime.now()
-        ));
+                "Initial Stock"
+        );
     }
 
     public void adjustStock(int qty, BigDecimal unitCost, String reference) {
-        int oldStock = stock.value();
-        BigDecimal oldUnitCost = pricing.averageCost();
+        int previousStock = stock.value();
+        BigDecimal previousAvgCost = pricing.averageCost();
 
         stock = new Stock(qty);
         pricing = pricing.updateAverageCost(unitCost);
 
-        domainEvents.add(new StockAdjustedEvent(
+        addStockAdjustedEvent(
                 MovementType.ADJUST,
-                oldStock,
+                previousStock,
                 qty,
-                oldUnitCost,
+                previousAvgCost,
                 unitCost,
-                reference,
-                name,
-                id,
-                OffsetDateTime.now()
-        ));
+                reference
+        );
     }
 
     public void receiveIn(int qty, BigDecimal unitCost, String reference) {
-        int oldStock = stock.value();
-        BigDecimal oldUnitCost = pricing.averageCost();
+        int previousStock = stock.value();
+        BigDecimal previousAvgCost = pricing.averageCost();
 
         stock = stock.add(qty);
         newAverageCost(unitCost, qty);
 
-        domainEvents.add(new StockAdjustedEvent(
+        addStockAdjustedEvent(
                 MovementType.IN,
-                oldStock,
+                previousStock,
                 qty,
-                oldUnitCost,
+                previousAvgCost,
                 unitCost,
-                reference,
-                name,
-                id,
-                OffsetDateTime.now()
-        ));
+                reference
+        );
     }
 
     public void consumeOut(int qty, String reference) {
-        int oldStock = stock.value();
+        int previousStock = stock.value();
 
         stock = stock.subtract(qty);
 
-        domainEvents.add(new StockAdjustedEvent(
+        addStockAdjustedEvent(
                 MovementType.OUT,
-                oldStock,
+                previousStock,
                 qty,
                 pricing.averageCost(),
                 null,
-                reference,
-                name,
-                id,
-                OffsetDateTime.now()
-        ));
+                reference
+        );
     }
 
     public void devolutionIn(int qty, String reference) {
-        int oldStock = stock.value();
+        int previousStock
+                = stock.value();
 
         stock = stock.add(qty);
 
-        domainEvents.add(new StockAdjustedEvent(
+        addStockAdjustedEvent(
                 MovementType.DEVOLUTION,
-                oldStock,
+                previousStock,
                 qty,
                 pricing.averageCost(),
                 null,
-                reference,
-                name,
-                id,
-                OffsetDateTime.now()
-        ));
+                reference
+        );
     }
 
     private void newAverageCost(BigDecimal unitCost, int qty) {
@@ -150,6 +134,28 @@ public final class Product {
     }
 
     //-- Domain Events --
+
+    private void addStockAdjustedEvent(
+            MovementType type,
+            int stockBefore,
+            int quantity,
+            BigDecimal averageCostBefore,
+            BigDecimal unitCost,
+            String reference
+    ) {
+        domainEvents.add(new StockAdjustedEvent(
+                type,
+                stockBefore,
+                quantity,
+                averageCostBefore,
+                unitCost,
+                reference,
+                name,
+                id,
+                OffsetDateTime.now()
+        ));
+    }
+
 
     public List<DomainEvent> pullDomainEvents() {
         var out = new ArrayList<>(domainEvents);

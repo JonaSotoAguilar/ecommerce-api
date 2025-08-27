@@ -1,12 +1,12 @@
-package com.ecommerce.productService.infrastructure.web.controller;
+package com.ecommerce.productservice.infrastructure.web.controller;
 
-import com.ecommerce.productService.application.dto.ProductDto;
-import com.ecommerce.productService.application.usecase.ProductCrudUseCase;
-import com.ecommerce.productService.application.usecase.SearchProductsUseCase;
-import com.ecommerce.productService.application.usecase.StockAdjustUseCase;
-import com.ecommerce.productService.infrastructure.web.mapper.UserWebMapper;
-import com.ecommerce.productService.infrastructure.web.request.ProductRequest;
-import com.ecommerce.productService.infrastructure.web.request.StockRequest;
+import com.ecommerce.productservice.application.dto.ProductDto;
+import com.ecommerce.productservice.application.usecase.ProductCrudUseCase;
+import com.ecommerce.productservice.application.usecase.SearchProductsUseCase;
+import com.ecommerce.productservice.application.usecase.StockAdjustUseCase;
+import com.ecommerce.productservice.infrastructure.web.mapper.UserWebMapper;
+import com.ecommerce.productservice.infrastructure.web.request.ProductRequest;
+import com.ecommerce.productservice.infrastructure.web.request.StockRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -88,17 +88,17 @@ public class ProductController {
     // --- Filters Operations ---
 
     @GetMapping("/by-category/{categoryId}")
-    public ResponseEntity<List<ProductDto>> byCategory(@PathVariable Long categoryId) {
-        return ResponseEntity.ok(search.byCategory(categoryId));
+    public ResponseEntity<List<ProductDto>> getAllByCategory(@PathVariable Long categoryId) {
+        return ResponseEntity.ok(search.getAllByCategory(categoryId));
     }
 
     @GetMapping("/under-price")
-    public ResponseEntity<List<ProductDto>> underPrice(@RequestParam("max") @Min(0) BigDecimal maxPrice) {
-        return ResponseEntity.ok(search.underPrice(maxPrice));
+    public ResponseEntity<List<ProductDto>> getAllUnderPrice(@RequestParam("max") @Min(0) BigDecimal maxPrice) {
+        return ResponseEntity.ok(search.getAllUnderPrice(maxPrice));
     }
 
     @GetMapping("/under-stock")
-    public ResponseEntity<List<ProductDto>> underStock(@RequestParam("max") @Min(0) Integer maxStock) {
-        return ResponseEntity.ok(search.underStock(maxStock));
+    public ResponseEntity<List<ProductDto>> getAllUnderStock(@RequestParam("max") @Min(0) Integer maxStock) {
+        return ResponseEntity.ok(search.getAllUnderStock(maxStock));
     }
 }

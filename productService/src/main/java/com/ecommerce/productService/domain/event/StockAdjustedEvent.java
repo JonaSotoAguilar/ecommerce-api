@@ -1,6 +1,6 @@
-package com.ecommerce.productService.domain.event;
+package com.ecommerce.productservice.domain.event;
 
-import com.ecommerce.productService.domain.model.constant.MovementType;
+import com.ecommerce.productservice.domain.model.movement.MovementType;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

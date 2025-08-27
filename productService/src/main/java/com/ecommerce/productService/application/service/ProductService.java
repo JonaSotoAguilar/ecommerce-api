@@ -1,13 +1,15 @@
-package com.ecommerce.productService.application.service;
+package com.ecommerce.productservice.application.service;
 
-import com.ecommerce.productService.application.dto.ProductDto;
-import com.ecommerce.productService.application.mapper.ProductDtoMapper;
-import com.ecommerce.productService.application.usecase.ProductCrudUseCase;
-import com.ecommerce.productService.application.usecase.SearchProductsUseCase;
-import com.ecommerce.productService.application.usecase.StockAdjustUseCase;
-import com.ecommerce.productService.domain.model.Product;
-import com.ecommerce.productService.domain.port.CategoryRepositoryPort;
-import com.ecommerce.productService.domain.port.ProductRepositoryPort;
+import com.ecommerce.productservice.application.constant.ErrorCode;
+import com.ecommerce.productservice.application.dto.ProductDto;
+import com.ecommerce.productservice.application.exception.BusinessException;
+import com.ecommerce.productservice.application.mapper.ProductDtoMapper;
+import com.ecommerce.productservice.application.usecase.ProductCrudUseCase;
+import com.ecommerce.productservice.application.usecase.SearchProductsUseCase;
+import com.ecommerce.productservice.application.usecase.StockAdjustUseCase;
+import com.ecommerce.productservice.domain.model.product.Product;
+import com.ecommerce.productservice.domain.port.CategoryRepositoryPort;
+import com.ecommerce.productservice.domain.port.ProductRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Service
 @Transactional
@@ -31,13 +34,10 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
     @Override
     public ProductDto create(ProductDto product) {
         Product newProduct = mapper.toDomain(product);
-
-        existsName(newProduct.getName());
-        existsBarcode(newProduct.getBarcode().value());
-        existsCategory(newProduct.getCategory().id());
+        validateUniquenessOnCreate(newProduct);
+        assertCategoryExists(newProduct.getCategory().id());
 
         Product created = repo.save(newProduct);
-
         created.createInitialStock();
         created.pullDomainEvents().forEach(publisher::publishEvent);
 
@@ -47,9 +47,7 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
     @Override
     @Transactional(readOnly = true)
     public ProductDto getById(Long id) {
-        return repo.findById(id)
-                .map(mapper::toDto)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+        return mapper.toDto(getProductOrThrow(id));
     }
 
     @Override
@@ -63,47 +61,34 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
     public ProductDto getByBarcode(String barcode) {
         return repo.findByBarcode(barcode)
                 .map(mapper::toDto)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
     @Override
     public ProductDto update(ProductDto product) {
-        Product current = repo.findById(product.id())
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
-
+        Product current = getProductOrThrow(product.id());
         Product changes = mapper.toDomain(product);
 
-        if (!changes.getName().equals(current.getName())) {
-            existsName(changes.getName());
-        }
-        if (!changes.getBarcode().equals(current.getBarcode())) {
-            existsBarcode(changes.getBarcode().value());
-        }
-        existsCategory(changes.getCategory().id());
-
-        Product updated = repo.save(changes);
+        validateUniquenessOnUpdate(current, changes);
+        assertCategoryExists(changes.getCategory().id());
 
         if (!changes.getStock().equals(current.getStock())) {
-            current.adjustStock(
-                    changes.getStock().value() - current.getStock().value(),
+            withProductMutated(current.getId(), p -> p.adjustStock(
+                    changes.getStock().value(),
                     changes.getPricing().averageCost(),
                     "Ajuste por actualización de producto"
-            );
-            current.pullDomainEvents().forEach(publisher::publishEvent);
+            ));
         }
 
-        return mapper.toDto(updated);
+        return mapper.toDto(repo.save(changes));
     }
 
     @Override
     public void delete(Long id) {
-        Product product = repo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+        Product product = getProductOrThrow(id);
 
         if (product.getStock().value() > 0) {
-            product.consumeOut(product.getStock().value(), "Delete Product " + product.getName());
-            repo.save(product);
-            product.pullDomainEvents().forEach(publisher::publishEvent);
+            withProductMutated(id, p -> p.consumeOut(p.getStock().value(), "Delete Product " + p.getName()));
         }
 
         repo.deleteById(id);
@@ -113,86 +98,90 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
 
     @Override
     public void adjustStock(Long productId, int qty, BigDecimal unitCost, String reference) {
-        Product product = repo.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
-
-        product.adjustStock(qty, unitCost, reference);
-        repo.save(product);
-        product.pullDomainEvents().forEach(publisher::publishEvent);
+        withProductMutated(productId, p -> p.adjustStock(qty, unitCost, reference));
     }
 
     @Override
     public void receiveIn(Long productId, int qty, BigDecimal unitCost, String reference) {
-        Product product = repo.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
-
-        product.receiveIn(qty, unitCost, reference);
-        repo.save(product);
-        product.pullDomainEvents().forEach(publisher::publishEvent);
+        withProductMutated(productId, p -> p.receiveIn(qty, unitCost, reference));
     }
 
     @Override
     public void consumeOut(Long productId, int qty, String reference) {
-        Product product = repo.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
-
-        product.consumeOut(qty, reference);
-        repo.save(product);
-        product.pullDomainEvents().forEach(publisher::publishEvent);
+        withProductMutated(productId, p -> p.consumeOut(qty, reference));
     }
 
     @Override
     public void devolutionIn(Long productId, int qty, String reference) {
-        Product product = repo.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
-
-        product.devolutionIn(qty, reference);
-        repo.save(product);
-        product.pullDomainEvents().forEach(publisher::publishEvent);
+        withProductMutated(productId, p -> p.devolutionIn(qty, reference));
     }
 
     //  --- Filters Operations ---
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductDto> byCategory(Long categoryId) {
-        categoryRepo.findById(categoryId)
-                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+    public List<ProductDto> getAllByCategory(Long categoryId) {
+        assertCategoryExists(categoryId);
 
         return mapper.toDtoList(repo.findAllByCategoryId(categoryId));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductDto> underPrice(BigDecimal maxPrice) {
+    public List<ProductDto> getAllUnderPrice(BigDecimal maxPrice) {
         return mapper.toDtoList(repo.findAllByPriceLessOrEqual(maxPrice));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductDto> underStock(Integer maxStock) {
+    public List<ProductDto> getAllUnderStock(Integer maxStock) {
         return mapper.toDtoList(repo.findAllByStockLessOrEqual(maxStock));
     }
 
-    //  --- Validations ---
+    //  --- Validations & Helpers ---
 
-    private void existsCategory(Long categoryId) {
+    private void assertCategoryExists(Long categoryId) {
         if (categoryId != null) {
             categoryRepo.findById(categoryId)
-                    .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrado"));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
         }
     }
 
-    private void existsName(String name) {
+    private void assertNameAvailable(String name) {
         if (repo.existsByName(name)) {
-            throw new IllegalArgumentException("Ya existe un producto con ese nombre");
+            throw new BusinessException(ErrorCode.PRODUCT_NAME_DUPLICATED);
         }
     }
 
-    private void existsBarcode(String barcode) {
+    private void assertBarcodeAvailable(String barcode) {
         if (repo.existsByBarcode(barcode)) {
-            throw new IllegalArgumentException("Ya existe un producto con ese código de barras");
+            throw new BusinessException(ErrorCode.PRODUCT_BARCODE_DUPLICATED);
         }
     }
 
+    private void validateUniquenessOnCreate(Product product) {
+        assertNameAvailable(product.getName());
+        assertBarcodeAvailable(product.getBarcode().value());
+    }
+
+    private void validateUniquenessOnUpdate(Product current, Product changes) {
+        if (!changes.getName().equals(current.getName())) {
+            assertNameAvailable(changes.getName());
+        }
+        if (!changes.getBarcode().equals(current.getBarcode())) {
+            assertBarcodeAvailable(changes.getBarcode().value());
+        }
+    }
+
+    private Product getProductOrThrow(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
+    }
+
+    private void withProductMutated(Long productId, Consumer<Product> mutator) {
+        Product product = getProductOrThrow(productId);
+        mutator.accept(product);
+        repo.save(product);
+        product.pullDomainEvents().forEach(publisher::publishEvent);
+    }
 }

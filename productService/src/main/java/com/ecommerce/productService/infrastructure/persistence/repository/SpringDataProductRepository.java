@@ -1,6 +1,6 @@
-package com.ecommerce.productService.infrastructure.persistence.repository;
+package com.ecommerce.productservice.infrastructure.persistence.repository;
 
-import com.ecommerce.productService.infrastructure.persistence.entity.ProductEntity;
+import com.ecommerce.productservice.infrastructure.persistence.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigDecimal;

@@ -1,11 +1,9 @@
-package com.ecommerce.productService.domain.model;
+package com.ecommerce.productservice.domain.model;
 
-import com.ecommerce.productService.domain.event.DomainEvent;
-import com.ecommerce.productService.domain.event.StockAdjustedEvent;
-import com.ecommerce.productService.domain.model.constant.MovementType;
-import com.ecommerce.productService.domain.model.vo.Barcode;
-import com.ecommerce.productService.domain.model.vo.Pricing;
-import com.ecommerce.productService.domain.model.vo.Stock;
+import com.ecommerce.productservice.domain.event.DomainEvent;
+import com.ecommerce.productservice.domain.event.StockAdjustedEvent;
+import com.ecommerce.productservice.domain.model.movement.MovementType;
+import com.ecommerce.productservice.domain.model.product.*;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

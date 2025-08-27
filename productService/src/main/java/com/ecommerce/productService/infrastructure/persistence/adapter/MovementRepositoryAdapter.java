@@ -1,9 +1,10 @@
-package com.ecommerce.productService.infrastructure.persistence.adapter;
+package com.ecommerce.productservice.infrastructure.persistence.adapter;
 
-import com.ecommerce.productService.domain.model.Movement;
-import com.ecommerce.productService.domain.port.MovementRepositoryPort;
-import com.ecommerce.productService.infrastructure.persistence.mapper.MovementDboMapper;
-import com.ecommerce.productService.infrastructure.persistence.repository.SpringDataMovementRepository;
+import com.ecommerce.productservice.domain.model.movement.Movement;
+import com.ecommerce.productservice.domain.model.movement.MovementType;
+import com.ecommerce.productservice.domain.port.MovementRepositoryPort;
+import com.ecommerce.productservice.infrastructure.persistence.mapper.MovementDboMapper;
+import com.ecommerce.productservice.infrastructure.persistence.repository.SpringDataMovementRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -30,5 +31,15 @@ public class MovementRepositoryAdapter implements MovementRepositoryPort {
     @Override
     public List<Movement> findAll() {
         return mapper.toDomainList(db.findAll());
+    }
+
+    @Override
+    public List<Movement> findAllByProduct(Long id) {
+        return mapper.toDomainList(db.findByProduct_Id(id));
+    }
+
+    @Override
+    public List<Movement> findAllByType(MovementType type) {
+        return mapper.toDomainList(db.findByType(type));
     }
 }

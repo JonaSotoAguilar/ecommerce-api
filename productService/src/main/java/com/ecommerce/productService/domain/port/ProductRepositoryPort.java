@@ -1,6 +1,6 @@
-package com.ecommerce.productService.domain.port;
+package com.ecommerce.productservice.domain.port;
 
-import com.ecommerce.productService.domain.model.Product;
+import com.ecommerce.productservice.domain.model.product.Product;
 
 import java.util.List;
 import java.util.Optional;

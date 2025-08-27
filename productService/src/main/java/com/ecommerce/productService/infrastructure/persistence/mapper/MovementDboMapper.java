@@ -1,7 +1,7 @@
-package com.ecommerce.productService.infrastructure.persistence.mapper;
+package com.ecommerce.productservice.infrastructure.persistence.mapper;
 
-import com.ecommerce.productService.domain.model.Movement;
-import com.ecommerce.productService.infrastructure.persistence.entity.MovementEntity;
+import com.ecommerce.productservice.domain.model.movement.Movement;
+import com.ecommerce.productservice.infrastructure.persistence.entity.MovementEntity;
 import org.mapstruct.Mapper;
 
 import java.util.List;

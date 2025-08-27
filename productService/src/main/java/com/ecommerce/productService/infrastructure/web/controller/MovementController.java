@@ -1,7 +1,9 @@
-package com.ecommerce.productService.infrastructure.web.controller;
+package com.ecommerce.productservice.infrastructure.web.controller;
 
-import com.ecommerce.productService.application.dto.MovementDto;
-import com.ecommerce.productService.application.usecase.MovementCrudCase;
+import com.ecommerce.productservice.application.dto.MovementDto;
+import com.ecommerce.productservice.application.usecase.MovementCrudCase;
+import com.ecommerce.productservice.application.usecase.SearchMovementUseCase;
+import com.ecommerce.productservice.domain.model.movement.MovementType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,7 @@ import java.util.List;
 public class MovementController {
 
     private final MovementCrudCase crud;
+    private final SearchMovementUseCase search;
 
     @GetMapping("/{id}")
     public ResponseEntity<MovementDto> get(@PathVariable Long id) {
@@ -26,6 +29,18 @@ public class MovementController {
     @GetMapping
     public ResponseEntity<List<MovementDto>> getAll() {
         return ResponseEntity.ok(crud.getAll());
+    }
+
+    // -- Search Operations ---
+
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<List<MovementDto>> getAllByProduct(@PathVariable Long productId) {
+        return ResponseEntity.ok(search.getAllByProduct(productId));
+    }
+
+    @GetMapping("/type/{type}")
+    public ResponseEntity<List<MovementDto>> getAllByType(@PathVariable MovementType type) {
+        return ResponseEntity.ok(search.getAllByType(type));
     }
 
 }

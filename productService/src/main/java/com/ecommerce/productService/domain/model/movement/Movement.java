@@ -1,7 +1,7 @@
-package com.ecommerce.productService.domain.model;
+package com.ecommerce.productservice.domain.model.movement;
 
 
-import com.ecommerce.productService.domain.model.constant.MovementType;
+import com.ecommerce.productservice.domain.model.product.Product;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

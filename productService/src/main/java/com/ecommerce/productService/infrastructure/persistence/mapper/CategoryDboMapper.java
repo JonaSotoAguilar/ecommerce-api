@@ -1,7 +1,7 @@
-package com.ecommerce.productService.infrastructure.persistence.mapper;
+package com.ecommerce.productservice.infrastructure.persistence.mapper;
 
-import com.ecommerce.productService.domain.model.Category;
-import com.ecommerce.productService.infrastructure.persistence.entity.CategoryEntity;
+import com.ecommerce.productservice.domain.model.Category;
+import com.ecommerce.productservice.infrastructure.persistence.entity.CategoryEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
