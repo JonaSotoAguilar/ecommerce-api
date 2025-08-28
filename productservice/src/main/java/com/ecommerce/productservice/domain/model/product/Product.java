@@ -156,7 +156,6 @@ public final class Product {
         ));
     }
 
-
     public List<DomainEvent> pullDomainEvents() {
         var out = new ArrayList<>(domainEvents);
         domainEvents.clear();

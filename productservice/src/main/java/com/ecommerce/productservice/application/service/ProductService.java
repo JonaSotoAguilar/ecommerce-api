@@ -35,8 +35,11 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
     @Override
     public ProductDto create(ProductDto product) {
         Product newProduct = mapper.toDomain(product);
+
         validateUniquenessOnCreate(newProduct);
-        newProduct.setCategory(getCategoryOrThrow(newProduct.getCategory().id()));
+        if (newProduct.getCategory() != null) {
+            newProduct.setCategory(getCategoryOrThrow(newProduct.getCategory().id()));
+        }
 
         Product created = repo.save(newProduct);
         created.createInitialStock();
@@ -71,8 +74,9 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
         Product changes = mapper.toDomain(product);
 
         validateUniquenessOnUpdate(current, changes);
-        changes.setCategory(getCategoryOrThrow(changes.getCategory().id()));
-
+        if (changes.getCategory() != null) {
+            changes.setCategory(getCategoryOrThrow(changes.getCategory().id()));
+        }
         if (!changes.getStock().equals(current.getStock())) {
             withProductMutated(current.getId(), p -> p.adjustStock(
                     changes.getStock().value(),
@@ -168,11 +172,8 @@ public class ProductService implements ProductCrudUseCase, SearchProductsUseCase
     }
 
     private Category getCategoryOrThrow(Long categoryId) {
-        if (categoryId != null) {
-            return categoryRepo.findById(categoryId)
-                    .orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
-        }
-        return null;
+        return categoryRepo.findById(categoryId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
     }
 
     private Product getProductOrThrow(Long id) {
