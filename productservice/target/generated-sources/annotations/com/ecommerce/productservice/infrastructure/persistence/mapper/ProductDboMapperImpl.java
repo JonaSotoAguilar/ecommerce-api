@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-09-01T17:16:27-0400",
-    comments = "version: 1.6.2, compiler: javac, environment: Java 24.0.2 (Oracle Corporation)"
+    date = "2025-10-01T20:46:32-0300",
+    comments = "version: 1.6.2, compiler: javac, environment: Java 25 (Oracle Corporation)"
 )
 @Component
 public class ProductDboMapperImpl implements ProductDboMapper {
